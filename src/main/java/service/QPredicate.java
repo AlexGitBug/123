@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class QPredicate {
 
@@ -36,4 +37,5 @@ public class QPredicate {
     public Predicate buildOr() {
         return ExpressionUtils.anyOf(predicates);
     }
+
 }

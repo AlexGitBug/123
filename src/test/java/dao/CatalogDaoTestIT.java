@@ -22,7 +22,11 @@ class CatalogDaoTestIT {
             session.save(bag);
             closeTransactionSession();
 
-            var query = session.createNativeQuery("select c.* from catalog c ", Catalog.class);
+            String sql = """
+                    SELECT *
+                    FROM catalog
+                    """;
+            var query = session.createSQLQuery(sql).addEntity(Catalog.class);
             var actualResult = query.list();
 
             assertThat(actualResult).containsExactlyInAnyOrder(tv, smartphone, bag);

@@ -23,13 +23,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"shoppingCart", "catalog"})
+@ToString(exclude = {"shoppingCarts", "catalog"})
 @Builder
 @Entity
-
 public class Product {
 
     @Id
@@ -56,5 +56,36 @@ public class Product {
 
     @Builder.Default
     @OneToMany(mappedBy = "product")
-    private List<ShoppingCart> shoppingCart = new ArrayList<>();
+    private List<ShoppingCart> shoppingCarts = new ArrayList<>();
+
+    public String getBrandAndPrice() {
+        return getBrand().name() + " " + String.valueOf(price);
+    }
+
+    public String getFullFilterForOneProduct() {
+        return getCatalog().getCategory() + " " + getBrand() + " " + getModel() + " " + getDateOfRelease() + " "
+                + getPrice() + " " + getColor();
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

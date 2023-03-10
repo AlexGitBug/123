@@ -6,16 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.Session;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Date;
 
 
 @Data
@@ -30,25 +25,25 @@ public class ShoppingCart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 
     @Column(name = "created_at")
-    private Instant createdAt;
+    private LocalDate createdAt;
 
     public void setOrder(Order order) {
         this.order = order;
-        this.order.getShoppingCart().add(this);
+        this.order.getShoppingCarts().add(this);
     }
 
     public void setProduct(Product product) {
         this.product = product;
-        this.product.getShoppingCart().add(this);
+        this.product.getShoppingCarts().add(this);
     }
 
     public void addProduct(Session session, Order order, Product... products) {
@@ -56,8 +51,12 @@ public class ShoppingCart {
                 .map(product -> ShoppingCart.builder()
                         .order(order)
                         .product(product)
-                        .createdAt(Instant.now())
+                        .createdAt(LocalDate.now())
                         .build())
                 .forEach(session::save);
+    }
+
+    public String getIdAndCatalogOfProduct() {
+        return order.getId() + " " + product.getCatalog();
     }
 }

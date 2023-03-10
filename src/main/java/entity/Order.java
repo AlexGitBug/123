@@ -1,6 +1,6 @@
 package entity;
 
-import entity.embeddable.DeliveryAdress;
+import entity.embedded.DeliveryAdress;
 import entity.enums.PaymentCondition;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,26 +8,23 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 
+@NamedEntityGraph(name = "findAllOrdersWithProductsOfOneUser",
+        attributeNodes = {
+                @NamedAttributeNode(value = "shoppingCarts", subgraph = "product"),
+                @NamedAttributeNode(value = "user")
+        }, subgraphs = {
+        @NamedSubgraph(name = "product", attributeNodes = @NamedAttributeNode("product"))
+})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "shoppingCart")
+@ToString(exclude = "shoppingCarts")
 @Builder
 @Entity
 @Table(name = "orders", schema = "public")
@@ -47,7 +44,7 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private PaymentCondition paymentCondition;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     public void setUser(User user) {
@@ -57,16 +54,7 @@ public class Order {
 
     @Builder.Default
     @OneToMany(mappedBy = "order")
-    private List<ShoppingCart> shoppingCart = new ArrayList<>();
-
-//    public void addProduct(Product product) {
-//        ShoppingCart sc = new ShoppingCart();
-//        sc.setOrder(this);
-//        sc.setProduct(product);
-//        sc.setCreatedAt(Instant.now());
-//        shoppingCart.add(sc);
-//    }
+    private List<ShoppingCart> shoppingCarts = new ArrayList<>();
 
 
-//    }
 }

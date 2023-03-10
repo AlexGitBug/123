@@ -24,9 +24,12 @@ class UserDaoTestIT {
             session.save(userTest);
             closeTransactionSession();
 
-
-            var actualResult = session.createQuery("select u from User u ", User.class)
-                    .list();
+            String sql = """
+                    SELECT *
+                    FROM users
+                    """;
+            var query = session.createSQLQuery(sql).addEntity(User.class);
+            var actualResult = query.list();
 
             assertThat(actualResult).containsExactlyInAnyOrder(user, userTest);
         }

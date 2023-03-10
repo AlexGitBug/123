@@ -1,7 +1,7 @@
 package dao;
 
 import entity.Order;
-import entity.embeddable.DeliveryAdress;
+import entity.embedded.DeliveryAdress;
 import entity.enums.PaymentCondition;
 import org.hibernate.Session;
 import org.junit.jupiter.api.Test;

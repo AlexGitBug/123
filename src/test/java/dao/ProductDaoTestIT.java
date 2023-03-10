@@ -35,7 +35,7 @@ class ProductDaoTestIT {
             var actualResult = query.list();
 
             assertThat(actualResult).containsExactlyInAnyOrder(product, productTest);
-    }
+        }
     }
 
     @Test
